@@ -20,7 +20,7 @@ public class UserRepository {
     @NonNull
     private Connection connection;
 
-    private AtomicLong nextId = new AtomicLong(1L);
+    private final AtomicLong nextId = new AtomicLong(1L);
 
     public User save(User user) {
         if (user.getId() == null) {
@@ -28,7 +28,8 @@ public class UserRepository {
         }
         try {
             Statement st = connection.createStatement();
-            int result = st.executeUpdate( "insert into users values( '" + user.getId() +"', '" + user.getName() + "')");
+            int result = st.executeUpdate( "insert into users(id, name) " +
+                    "values( '" + user.getId() +"', '" + user.getName() + "')");
             log.info("execution result: " + result);
         } catch (Exception e) {
             e.printStackTrace();
@@ -49,8 +50,8 @@ public class UserRepository {
             PreparedStatement pst = connection.prepareStatement(SQL_QUERY);
             pst.setString(1, userId);
             ResultSet rs = pst.executeQuery();
-            User user = new User();
             while (rs.next()) {
+                User user = new User();
                 user.setId(rs.getString("id"));
                 user.setName(rs.getString("name"));
                 result = Optional.of(user);
@@ -64,10 +65,46 @@ public class UserRepository {
     }
 
     public Stream<User> findAll() {
-        return Stream.empty();
+        Stream.Builder<User> streamBuilder = Stream.builder();
+        try {
+            String SQL_QUERY = "SELECT * FROM users";
+            PreparedStatement pst = connection.prepareStatement(SQL_QUERY);
+            ResultSet rs = pst.executeQuery();
+
+            while (rs.next()) {
+                User user = new User();
+                user.setId(rs.getString("id"));
+                user.setName(rs.getString("name"));
+                streamBuilder.add(user);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+
+        return streamBuilder.build();
     }
 
     public String delete(User user) {
-        return null;
+        try {
+            Statement st = connection.createStatement();
+            int result = st.executeUpdate( "UPDATE users SET isDeleted = TRUE WHERE id = '" + user.getId() +"')");
+            log.info("execution result: " + result);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+        return user.getId();
+    }
+    public String delete(String userId) {
+        try {
+            Statement st = connection.createStatement();
+            int result = st.executeUpdate( "UPDATE users SET isDeleted = TRUE WHERE id = '" + userId +"'");
+            log.info("execution result: " + result);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+        return userId;
     }
 }

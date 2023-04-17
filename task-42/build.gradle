@@ -28,6 +28,9 @@ dependencies {
     //connection pool
     implementation 'com.zaxxer:HikariCP:5.0.1'
 
+    // webserver
+    implementation 'org.eclipse.jetty:jetty-servlet:11.0.15'
+
     //Mockito
     testImplementation 'org.mockito:mockito-core:3.11.2'
     testImplementation 'org.mockito:mockito-junit-jupiter:3.11.2'

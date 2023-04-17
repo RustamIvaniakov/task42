@@ -4,7 +4,6 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import java.io.Closeable;
 import java.sql.Connection;
-import java.sql.SQLException;
 
 public class H2DataSource implements Closeable {
     private final HikariDataSource dataSource;
@@ -14,7 +13,12 @@ public class H2DataSource implements Closeable {
 
     public H2DataSource(String baseName, String username, String password, String initBlock) {
         HikariConfig config = new HikariConfig();
-        config.setJdbcUrl("jdbc:h2:mem:" + baseName + ";DB_CLOSE_DELAY=-1;INIT=" + initBlock);
+
+        String jdbcUrl = "jdbc:h2:mem:" + baseName;
+        if (initBlock != null) {
+            jdbcUrl += ";DB_CLOSE_DELAY=-1;INIT=" + initBlock;
+        }
+        config.setJdbcUrl(jdbcUrl);
         config.setUsername(username);
         config.setPassword(password);
         config.setMaximumPoolSize(maximumPoolSize);

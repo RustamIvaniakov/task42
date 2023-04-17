@@ -18,7 +18,7 @@ public class BookingRepository {
     public Booking save(Booking booking) throws RuntimeException {
         try {
             Statement st = connection.createStatement();
-            st.executeUpdate("INSERT INTO bookings " +
+            st.executeUpdate("INSERT INTO bookings (id, userId, deviceId, startTime, endTime) " +
                     "VALUES ('" + booking.getId() + "'," +
                     "'" + booking.getUserId() + "', '" + booking.getDeviceId() + "', '" + booking.getStartTime() + "', '" + booking.getEndTime() + "')");
         } catch (Exception e) {

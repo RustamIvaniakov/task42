@@ -17,7 +17,8 @@ public class DeviceRepository {
     public Device save(Device device) {
         try {
             Statement st = connection.createStatement();
-            int result = st.executeUpdate( "insert into devices values( '" + device.getId() +"', '" + device.getName() +"', '" + device.getTechnology() +"', null)");
+            int result = st.executeUpdate( "insert into devices (id, name, technology, fonoId) " +
+                    "values( '" + device.getId() +"', '" + device.getName() +"', '" + device.getTechnology() +"', null)");
             log.info("execution result: " + result);
         } catch (Exception e) {
             e.printStackTrace();

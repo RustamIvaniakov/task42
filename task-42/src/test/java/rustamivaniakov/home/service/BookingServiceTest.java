@@ -1,7 +1,8 @@
 package rustamivaniakov.home.service;
 
 import static org.junit.jupiter.api.Assertions.*;
-import org.junit.jupiter.api.Test;
+
+import org.junit.jupiter.api.*;
 import rustamivaniakov.home.db.H2DataSource;
 import rustamivaniakov.home.model.Device;
 import rustamivaniakov.home.model.User;
@@ -20,10 +21,11 @@ public class BookingServiceTest {
     private static final String pathToResource = BookingRepository.class.getClassLoader().getResource("test-datasource.properties").getPath();
     private static final Connection connection = new H2DataSource(pathToResource).getConnection();
 
-    private final BookingRepository bookingRepository = new BookingRepository(connection);
-    private final UserRepository userRepository = new UserRepository(connection);
-    private final DeviceRepository deviceRepository = new DeviceRepository(connection);
-    private final BookingService  bookingService = new BookingService(bookingRepository, userRepository, deviceRepository);
+    private BookingRepository bookingRepository = new BookingRepository(connection);
+    private UserRepository userRepository = new UserRepository(connection);
+    private DeviceRepository deviceRepository = new DeviceRepository(connection);
+    private BookingService  bookingService = new BookingService(bookingRepository, userRepository, deviceRepository);
+
 
     @Test
     void shouldBookDeviceByUserIdAndDeviceId() {
